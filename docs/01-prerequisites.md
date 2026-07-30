@@ -1,31 +1,93 @@
 # Prerequisites
 
-Before setting up SSH over a mobile hotspot, confirm the following:
+Before starting this guide, ensure you have the following hardware, software, and basic knowledge.
 
-- A rooted Android phone
-- Magisk installed and working
-- A Linux shell environment on Android (Alpine Linux in a chroot is used in this guide)
-- A second device such as Windows or Linux connected to the same hotspot
-- Basic access to `adb` and root shell (`su`)
-- Network access on the hotspot and the ability to test ping/SSH
+## Hardware
 
-## Recommended device layout
+- A rooted Android device that will act as the SSH server
+- A Windows, Linux, or macOS computer that will act as the SSH client
+- A second Android phone (or another device) capable of creating a Mobile Hotspot
 
-- Android phone: runs the Alpine chroot and OpenSSH server
-- PC: connects over the same hotspot and uses SSH to reach the phone
+## Software
 
-## Tools used in this guide
+### Android
 
-- `adb`
-- `su`
-- `chroot`
-- `iptables`
-- `ip`
-- `ip neigh`
-- `tcpdump`
-- `sshd`
-- Magisk `service.d`
+- Magisk
+- BusyBox
+- Terminal emulator (optional but recommended)
+- Alpine Linux RootFS
 
-## Notes
+### Computer
 
-This guide assumes you control the Android device and the network configuration you are testing. It documents troubleshooting and maintenance of a portable SSH setup, not methods to defeat hotspot security controls.
+- OpenSSH client
+- ADB Platform Tools
+- USB cable (recommended for initial setup)
+
+## Network Requirements
+
+Both the Android server and the client computer must be connected to the **same Mobile Hotspot**.
+
+```
+                Mobile Hotspot
+                     │
+        ┌────────────┴────────────┐
+        │                         │
+ Rooted Android              Windows/Linux
+    SSH Server                  SSH Client
+```
+
+## Android Requirements
+
+Verify that your device has:
+
+- Bootloader unlocked
+- Root access
+- Magisk installed
+- BusyBox installed
+- Enough free storage for Alpine Linux
+
+## Verify Root Access
+
+Open a terminal and run:
+
+```bash
+su
+id
+```
+
+Expected output:
+
+```text
+uid=0(root) gid=0(root)
+```
+
+## Verify Network Connectivity
+
+Ensure both devices receive IP addresses from the hotspot network.
+
+Example:
+
+| Device | Example IP |
+|---------|------------|
+| Android Server | `10.55.51.31` |
+| Windows Client | `10.55.51.32` |
+
+You can verify the Android IP address with:
+
+```bash
+ip addr show wlan0
+```
+
+## What You Will Build
+
+By the end of this guide you will have:
+
+- Alpine Linux running on a rooted Android device
+- OpenSSH server running on port **2222**
+- Automatic SSH startup using Magisk
+- A Windows or Linux client able to connect over a Mobile Hotspot
+- A troubleshooting guide for diagnosing common connectivity issues
+
+## Next Step
+
+Continue to **02-rooting-the-device.md**
